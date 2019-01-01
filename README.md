@@ -1,4 +1,6 @@
 # Gopher
+[![Go Report Card](https://goreportcard.com/badge/github.com/MovieStoreGuy/gopher)](https://goreportcard.com/report/github.com/MovieStoreGuy/gopher)
+[![Maintainability](https://api.codeclimate.com/v1/badges/3f34c6090b7f4fa04596/maintainability)](https://codeclimate.com/github/MovieStoreGuy/gopher/maintainability)
 _Gopher enables the management and development of Golang projects while switch between different developer environments._
 
 When trying to develop projects under different usernames or organisations, it can become frustrating walking through the directories. In order to simplify creating projects, gopher aims to make creating a project less taxing on the developer creating it and just let them get on with it.
@@ -44,4 +46,4 @@ Verbs:
 **Note: Due to a limitation with the library being used within, options must occur before the verb.**
 
 ## Further Development
-This project is in alpha and should be used with care. Any feature requests should be raied against the project. 
+This project is in alpha and should be used with care. Any feature requests should be raied against the project.
