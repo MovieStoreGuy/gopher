@@ -21,14 +21,11 @@ func CreateProject(Profile *types.Profile, name string) error {
 	if err := types.ValidateProfile(Profile); err != nil {
 		return err
 	}
-	var (
-		ProjectPath = ""
-	)
-	if Profile.EnableModules == "on" {
-		ProjectPath = path.Join(Profile.GoPath, name)
-	} else {
-		ProjectPath = path.Join(Profile.GoPath, "src", Profile.VCS, Profile.UserName, name)
+	ProjectPath, err := getProjectRoot(Profile)
+	if err != nil {
+		return err
 	}
+	ProjectPath = path.Join(ProjectPath, name)
 	if _, err := os.Stat(ProjectPath); os.IsExist(err) {
 		return errors.New("Project folder already exists")
 	}

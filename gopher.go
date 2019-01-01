@@ -18,11 +18,15 @@ var (
 
 		goptions.Verbs
 		Create struct {
-			Path   string `goptions:"-p, --path, description='Define an alternate path to create the project (Requires Go v1.11+)'"`
+			Path string `goptions:"-p, --path, description='Define an alternate path to create the project (Requires Go v1.11+)'"`
 
 			Help goptions.Help `goptions:"-h, --help, description='creates a project based on the supplied profile with the name added after flags'"`
 			goptions.Remainder
 		} `goptions:"create"`
+		Project struct {
+			Help goptions.Help `goptions:"-h, --help, description='To use projects ensure you supply a subverb of [show]'"`
+			goptions.Remainder
+		} `goptions:"project"`
 		Profile struct {
 			Name        string `goptions:"-n, --name, description='The name of the profile to store'"`
 			VCS         string `goptions:"-v, --vcs, description='The name of the VCS to use'"`
@@ -97,9 +101,7 @@ func main() {
 					os.Exit(1)
 				}
 			}
-			if options.Verbose {
-				color.Green("Finished creating new profile %s", options.Profile.Name)
-			}
+			color.Green("Finished creating new profile %s", options.Profile.Name)
 		case "set":
 			if options.Verbose {
 				color.Green("Updating current profile to be %s", options.Profile.Name)
@@ -125,6 +127,27 @@ func main() {
 			}
 		default:
 			color.Yellow("Unknown option %s", options.Profile.Remainder[0])
+			color.Yellow("Please see help for more information")
+			return
+		}
+	case "project":
+		if len(options.Project.Remainder) < 1 {
+			color.Yellow("Missing required subverbs")
+			os.Exit(1)
+		}
+		switch options.Project.Remainder[0] {
+		case "show":
+			projects, err := manager.GetProjects(currentProfile)
+			if err != nil {
+				color.Red("Unable to show projects due to: %v", err)
+				os.Exit(1)
+			}
+			color.Yellow("The current projects stored locally are:")
+			for _, p := range projects {
+				color.HiWhite("> %s", p)
+			}
+		default:
+			color.Yellow("Unknown option %s", options.Project.Remainder[0])
 			color.Yellow("Please see help for more information")
 			return
 		}
