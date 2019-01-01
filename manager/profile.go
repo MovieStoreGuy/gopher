@@ -13,6 +13,7 @@ import (
 var (
 	// GopherPath defines where to find the saved profiles
 	GopherPath     = path.Join(os.Getenv("HOME"), ".gopher")
+	// CurrentProfile is the profile to be used as a default
 	CurrentProfile = path.Join(GopherPath, "current")
 )
 
@@ -27,14 +28,18 @@ func init() {
 	}
 }
 
+// LoadProfile will load the given profile name wrapped by the GopherPath
 func LoadProfile(name string) (*types.Profile, error) {
 	return types.ConfigureProfile(path.Join(GopherPath, name))
 }
 
+// StoreProfile will store the given profile to the name file wrapped by the GopherProfile
 func StoreProfile(name string, Profile *types.Profile) error {
 	return types.WriteProfile(path.Join(GopherPath, name), *Profile)
 }
 
+// SetDefaultProfile will create a symlink using the CurrentProfile to soft link to the
+// actual profile to use
 func SetDefaultProfile(name string) error {
 	target := path.Join(GopherPath, name)
 	if _, err := os.Stat(target); os.IsNotExist(err) {
@@ -48,6 +53,8 @@ func SetDefaultProfile(name string) error {
 	return os.Symlink(target, CurrentProfile)
 }
 
+// GeStoredProfiles gets all the profiles stored within the GopherPath excluding current
+// as it is a soft link to a profile that exists
 func GetStoredProfiles() ([]*types.Profile, error) {
 	files, err := ioutil.ReadDir(GopherPath)
 	if err != nil {

@@ -24,7 +24,7 @@ var (
 			goptions.Remainder
 		} `goptions:"create"`
 		Project struct {
-			Help goptions.Help `goptions:"-h, --help, description='To use projects ensure you supply a nested verb of [show]'"`
+			Help goptions.Help `goptions:"-h, --help, description='To use projects ensure you supply a nested verb of [show,path]'"`
 			goptions.Remainder
 		} `goptions:"project"`
 		Profile struct {
@@ -146,6 +146,17 @@ func main() {
 			for _, p := range projects {
 				color.HiWhite("> %s", p)
 			}
+		case "path":
+			if len(options.Project.Remainder) < 2 {
+				color.Yellow("path requires a project name")
+				os.Exit(1)
+			}
+			pathName, err := manager.GetProjectPath(currentProfile, options.Project.Remainder[1])
+			if err != nil {
+				color.Red("Unable to show project due to: %v", err)
+				os.Exit(1)
+			}
+			color.HiWhite("%s", pathName)
 		default:
 			color.Yellow("Unknown option %s", options.Project.Remainder[0])
 			color.Yellow("Please see help for more information")

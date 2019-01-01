@@ -52,3 +52,17 @@ func getNestedProjects(project string) []string {
 	}
 	return projects
 }
+
+func GetProjectPath(Profile *types.Profile, name string) (string, error) {
+	if err := types.ValidateProfile(Profile); err != nil {
+		return "", err
+	}
+	projectRoot, err := getProjectRoot(Profile)
+	if err != nil {
+		return "", err
+	}
+	if _, err := os.Stat(path.Join(projectRoot, name)); os.IsNotExist(err) {
+		return "", err
+	}
+	return path.Join(projectRoot, name), nil
+}

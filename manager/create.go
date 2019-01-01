@@ -17,6 +17,7 @@ const (
 	DefaultReadMeTemplate = `# %s`
 )
 
+// CreateProject creates the project based on the profile with the name as the folder
 func CreateProject(Profile *types.Profile, name string) error {
 	if err := types.ValidateProfile(Profile); err != nil {
 		return err
