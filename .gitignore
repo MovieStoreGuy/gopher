@@ -1,5 +1,6 @@
 # IDE Profile folders
 .idea
 
-# Project binaries
+# Project files
+vendor
 gopher

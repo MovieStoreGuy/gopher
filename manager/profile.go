@@ -1,10 +1,13 @@
 package manager
 
 import (
-	"github.com/MovieStoreGuy/gopher/types"
-	"github.com/fatih/color"
+	"io/ioutil"
 	"os"
 	"path"
+	"strings"
+
+	"github.com/MovieStoreGuy/gopher/types"
+	"github.com/fatih/color"
 )
 
 var (
@@ -18,7 +21,7 @@ func init() {
 		color.Yellow("Creating a blank profile to use, ensure to create a new one")
 		if err := StoreProfile("current", &types.Profile{GoPath: os.Getenv("GOPATH")}); err != nil {
 			color.Red("Unable to create a blank profile due to %v", err)
-			return
+			os.Exit(1)
 		}
 		color.Yellow("Created a blank profile, be sure to define a profile")
 	}
@@ -43,4 +46,22 @@ func SetDefaultProfile(name string) error {
 		}
 	}
 	return os.Symlink(target, CurrentProfile)
+}
+
+func GetStoredProfiles() ([]*types.Profile, error) {
+	files, err := ioutil.ReadDir(GopherPath)
+	if err != nil {
+		return nil, err
+	}
+	var profiles []*types.Profile
+	for _, f := range files {
+		if !f.IsDir() && (f.Name() != "current" || strings.HasPrefix(f.Name(), ".")) {
+			p, err := LoadProfile(f.Name())
+			if err != nil {
+				return nil, err
+			}
+			profiles = append(profiles, p)
+		}
+	}
+	return profiles, nil
 }

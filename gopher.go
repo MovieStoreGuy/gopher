@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/MovieStoreGuy/gopher/manager"
 	"github.com/MovieStoreGuy/gopher/types"
 	"github.com/fatih/color"
 	"github.com/voxelbrain/goptions"
-	"os"
 )
 
 var (
@@ -17,12 +18,14 @@ var (
 
 		goptions.Verbs
 		Create struct {
-			Name   string `goptions:"-n, --name, obligatory, description='The name of the project to create'"`
 			Readme bool   `goptions:"-r, --readme, description='Add a basic readme to the project'"`
 			Path   string `goptions:"-p, --path, description='Define an alternate path to create the project (Requires Go v1.11+)'"`
+
+			Help goptions.Help `goptions:"-h, --help, description='creates a project based on the supplied profile with the name added after flags'"`
+			goptions.Remainder
 		} `goptions:"create"`
 		Profile struct {
-			Name        string `goptions:"-n, --name, obligatory, description='The name of the profile to store'"`
+			Name        string `goptions:"-n, --name, description='The name of the profile to store'"`
 			VCS         string `goptions:"-v, --vcs, description='The name of the VCS to use'"`
 			Username    string `goptions:"-u, --username, description='The username to develop as'"`
 			MakeDefault bool   `goptions:"-m, --make-default, description='Make the defined profile the default used'"`
@@ -38,7 +41,7 @@ var (
 func main() {
 	goptions.ParseAndFail(&options)
 
-	_, err := manager.LoadProfile(options.UserProfile)
+	currentProfile, err := manager.LoadProfile(options.UserProfile)
 	if options.Verbose {
 		color.Green("Loaded profile is: %s", options.UserProfile)
 	}
@@ -50,7 +53,19 @@ func main() {
 	}
 	switch options.Verbs {
 	case "create":
-
+		if len(options.Create.Remainder) < 1 {
+			color.Yellow("Create required a project name to be supplied")
+			os.Exit(1)
+		}
+		if options.Verbose {
+			color.Green("Attempting to create project %s", options.Create.Remainder[0])
+		}
+		if manager.CreateProject(currentProfile, options.Create.Remainder[0]); err != nil {
+			color.Red("There was an issue trying to create the project")
+			color.Red("Error recieved: %v", err)
+			os.Exit(1)
+		}
+		color.Green("Successfully created project %s", options.Create.Remainder[0])
 	case "profile":
 		if len(options.Profile.Remainder) < 1 {
 			goptions.PrintHelp()
@@ -92,12 +107,20 @@ func main() {
 				color.Red("Received error: %v", err)
 				os.Exit(1)
 			}
-			if options.Verbose {
-				color.Green("Successfully updated profile to be %s", options.Profile.Name)
-			}
+			color.Green("Successfully updated profile to be %s", options.Profile.Name)
 		case "show":
+			files, err := manager.GetStoredProfiles()
+			if err != nil {
+				color.Red("Unable to get stored profiles due to: %v", err)
+				os.Exit(1)
+			}
 			color.Yellow("The stored profiles are:")
-
+			for _, f := range files {
+				color.HiWhite("Name:     %s", f.Name)
+				color.HiWhite("Username: %s", f.UserName)
+				color.HiWhite("VCS:      %s", f.VCS)
+				color.HiWhite("---------------")
+			}
 		default:
 			color.Yellow("Unknown option %s", options.Profile.Remainder[0])
 			color.Yellow("Please see help for more information")
