@@ -47,4 +47,4 @@ Verbs:
 **Note: Due to a limitation with the library being used within, options must occur before the verb.**
 
 ## Further Development
-This project is in alpha and should be used with care. Any feature requests should be raied against the project.
+This project is in alpha and should be used with care. Any feature requests should be raised against the project.
