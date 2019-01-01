@@ -54,7 +54,6 @@ func getNestedProjects(project string) []string {
 	return projects
 }
 
-
 // GetProjectPath builds the profile path based of the Profile and returns to back to the callee
 func GetProjectPath(Profile *types.Profile, name string) (string, error) {
 	if err := types.ValidateProfile(Profile); err != nil {

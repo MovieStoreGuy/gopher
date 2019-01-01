@@ -14,6 +14,7 @@ import (
 )
 
 const (
+	// DefaultReadMeTemplate defines what a default README made by this project should contain
 	DefaultReadMeTemplate = `# %s`
 )
 

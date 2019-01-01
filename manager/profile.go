@@ -12,7 +12,7 @@ import (
 
 var (
 	// GopherPath defines where to find the saved profiles
-	GopherPath     = path.Join(os.Getenv("HOME"), ".gopher")
+	GopherPath = path.Join(os.Getenv("HOME"), ".gopher")
 	// CurrentProfile is the profile to be used as a default
 	CurrentProfile = path.Join(GopherPath, "current")
 )
@@ -53,7 +53,7 @@ func SetDefaultProfile(name string) error {
 	return os.Symlink(target, CurrentProfile)
 }
 
-// GeStoredProfiles gets all the profiles stored within the GopherPath excluding current
+// GetStoredProfiles gets all the profiles stored within the GopherPath excluding current
 // as it is a soft link to a profile that exists
 func GetStoredProfiles() ([]*types.Profile, error) {
 	files, err := ioutil.ReadDir(GopherPath)

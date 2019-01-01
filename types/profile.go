@@ -10,6 +10,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// Profile defines how a user would usual develop under their given profile
+// This enables saving time by fetch / storing data instead of asking for it each call
 type Profile struct {
 	GoPath        string `json:"gopath" yaml:"gopath" env:"GOPATH"`
 	Name          string `json:"name" yaml:"name" env:"GOPHER_PROFILE_NAME"`
