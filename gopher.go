@@ -60,9 +60,12 @@ func main() {
 		if options.Verbose {
 			color.Green("Attempting to create project %s", options.Create.Remainder[0])
 		}
+		if options.Create.Path != "" {
+			currentProfile.GoPath = options.Create.Path
+		}
 		if manager.CreateProject(currentProfile, options.Create.Remainder[0]); err != nil {
 			color.Red("There was an issue trying to create the project")
-			color.Red("Error recieved: %v", err)
+			color.Red("Error received: %v", err)
 			os.Exit(1)
 		}
 		color.Green("Successfully created project %s", options.Create.Remainder[0])

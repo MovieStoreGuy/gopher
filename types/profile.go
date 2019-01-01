@@ -11,10 +11,11 @@ import (
 )
 
 type Profile struct {
-	GoPath   string `json:"gopath" yaml:"gopath" env:"GOPATH" validate:"required"`
-	Name     string `json:"name" yaml:"name" env:"GOPHER_PROFILE_NAME"`
-	VCS      string `json:"vcs" yaml:"vcs" env:"GOPHER_VCS" validate:"required"`
-	UserName string `json:"username" yaml:"username" env:"GOPHER_USERNAME" validate:"required"`
+	GoPath        string `json:"gopath" yaml:"gopath" env:"GOPATH"`
+	Name          string `json:"name" yaml:"name" env:"GOPHER_PROFILE_NAME"`
+	VCS           string `json:"vcs" yaml:"vcs" env:"GOPHER_VCS" validate:"required"`
+	UserName      string `json:"username" yaml:"username" env:"GOPHER_USERNAME" validate:"required"`
+	EnableModules string `json:"enableModules" yaml:"enableModules" env:"GO111MODULE"`
 }
 
 var validate *validator.Validate
