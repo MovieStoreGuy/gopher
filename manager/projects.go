@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// GetProjects gets all projects under the current profile
 func GetProjects(Profile *types.Profile) ([]string, error) {
 	projectRoot, err := getProjectRoot(Profile)
 	if err != nil {
@@ -53,6 +54,8 @@ func getNestedProjects(project string) []string {
 	return projects
 }
 
+
+// GetProjectPath builds the profile path based of the Profile and returns to back to the callee
 func GetProjectPath(Profile *types.Profile, name string) (string, error) {
 	if err := types.ValidateProfile(Profile); err != nil {
 		return "", err

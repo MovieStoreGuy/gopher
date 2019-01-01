@@ -58,6 +58,8 @@ func WriteProfile(ProfilePath string, Profile Profile) error {
 	return ioutil.WriteFile(ProfilePath, buff, 0644)
 }
 
+// ValidateProfile ensures all required fields of the profile are met
+// so that other functions may use them to ensure it is correct
 func ValidateProfile(Profile *Profile) error {
 	return validate.Struct(Profile)
 }
