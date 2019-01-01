@@ -24,7 +24,7 @@ var (
 			goptions.Remainder
 		} `goptions:"create"`
 		Project struct {
-			Help goptions.Help `goptions:"-h, --help, description='To use projects ensure you supply a subverb of [show]'"`
+			Help goptions.Help `goptions:"-h, --help, description='To use projects ensure you supply a nested verb of [show]'"`
 			goptions.Remainder
 		} `goptions:"project"`
 		Profile struct {
@@ -33,7 +33,7 @@ var (
 			Username    string `goptions:"-u, --username, description='The username to develop as'"`
 			MakeDefault bool   `goptions:"-m, --make-default, description='Make the defined profile the default used'"`
 
-			Help goptions.Help `goptions:"-h, --help, description='To use profile ensure you supply a subverb of [create, show, set]'"`
+			Help goptions.Help `goptions:"-h, --help, description='To use profile ensure you supply a nested verb of [create, show, set]'"`
 			goptions.Remainder
 		} `goptions:"profile"`
 	}{
