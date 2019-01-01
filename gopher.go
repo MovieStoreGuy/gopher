@@ -18,7 +18,6 @@ var (
 
 		goptions.Verbs
 		Create struct {
-			Readme bool   `goptions:"-r, --readme, description='Add a basic readme to the project'"`
 			Path   string `goptions:"-p, --path, description='Define an alternate path to create the project (Requires Go v1.11+)'"`
 
 			Help goptions.Help `goptions:"-h, --help, description='creates a project based on the supplied profile with the name added after flags'"`
@@ -129,6 +128,8 @@ func main() {
 			color.Yellow("Please see help for more information")
 			return
 		}
-
+	default:
+		goptions.PrintHelp()
+		color.Yellow("No arguments passed")
 	}
 }
