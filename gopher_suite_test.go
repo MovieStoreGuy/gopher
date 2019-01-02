@@ -2,10 +2,10 @@ package main_test
 
 import (
 	. "github.com/onsi/ginkgo"
+	"github.com/onsi/ginkgo/reporters"
 	. "github.com/onsi/gomega"
 	"os"
 	"testing"
-	"github.com/onsi/ginkgo/reporters"
 )
 
 func TestApplication(t *testing.T) {

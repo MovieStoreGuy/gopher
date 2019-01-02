@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"io/ioutil"
 	"os"
 	"path"
@@ -18,6 +19,21 @@ type Profile struct {
 	VCS           string `json:"vcs" yaml:"vcs" env:"GOPHER_VCS" validate:"required"`
 	UserName      string `json:"username" yaml:"username" env:"GOPHER_USERNAME" validate:"required"`
 	EnableModules string `json:"enableModules" yaml:"enableModules" env:"GO111MODULE"`
+
+	SshKeyPath string `json:"sshkeypath" yaml:"sshkeypath" env:"GOPHER_SSH_KEYPATH"`
+	SshKey     string `json:"-" yaml:"-" env:"GOPHER_SSH_KEY"`
+}
+
+func (p *Profile) loadSshkey() error {
+	if p.SshKey != "" || p.SshKeyPath == "" {
+		return nil
+	}
+	buff, err := ioutil.ReadFile(p.SshKeyPath)
+	if err != nil {
+		return err
+	}
+	p.SshKey = bytes.NewBuffer(buff).String()
+	return nil
 }
 
 var validate *validator.Validate
@@ -32,9 +48,6 @@ func ConfigureProfile(ProfilePath string) (*Profile, error) {
 	var (
 		profile Profile
 	)
-	if _, err := env.UnmarshalFromEnviron(&profile); err != nil {
-		return nil, err
-	}
 	buff, err := ioutil.ReadFile(ProfilePath)
 	if err != nil {
 		return nil, err
@@ -42,7 +55,10 @@ func ConfigureProfile(ProfilePath string) (*Profile, error) {
 	if err = yaml.Unmarshal(buff, &profile); err != nil {
 		return nil, err
 	}
-	return &profile, nil
+	if _, err := env.UnmarshalFromEnviron(&profile); err != nil {
+		return nil, err
+	}
+	return &profile, (&profile).loadSshkey()
 }
 
 // WriteProfile takes a defined profile and writes it to disk

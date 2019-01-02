@@ -24,7 +24,7 @@ var (
 			goptions.Remainder
 		} `goptions:"create"`
 		Project struct {
-			Help goptions.Help `goptions:"-h, --help, description='To use projects ensure you supply a nested verb of [show,path]'"`
+			Help goptions.Help `goptions:"-h, --help, description='To use projects ensure you supply a nested verb of [show, path, ensure ]'"`
 			goptions.Remainder
 		} `goptions:"project"`
 		Profile struct {
@@ -46,7 +46,7 @@ func main() {
 
 	currentProfile, err := manager.LoadProfile(options.UserProfile)
 	if options.Verbose {
-		color.Green("Loaded profile is: %s", options.UserProfile)
+		color.Green("Loaded profile is: %+v", currentProfile)
 	}
 
 	if err != nil {
@@ -157,6 +157,20 @@ func main() {
 				os.Exit(1)
 			}
 			color.HiWhite("%s", pathName)
+		case "ensure":
+			var projectName string
+			if len(options.Project.Remainder) > 1 {
+				projectName = options.Project.Remainder[1]
+			}
+			if options.Verbose {
+				color.Green("Starting ensure process")
+			}
+			if err := manager.EnsureProjectVendor(currentProfile, projectName); err != nil {
+				color.Red("Unable to vendor project")
+				color.Red("Received error: %v", err)
+				os.Exit(1)
+			}
+			color.Green("Finished running ensure")
 		default:
 			color.Yellow("Unknown option %s", options.Project.Remainder[0])
 			color.Yellow("Please see help for more information")

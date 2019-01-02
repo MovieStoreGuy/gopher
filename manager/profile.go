@@ -1,6 +1,7 @@
 package manager
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"path"
@@ -41,6 +42,9 @@ func StoreProfile(name string, Profile *types.Profile) error {
 // SetDefaultProfile will create a symlink using the CurrentProfile to soft link to the
 // actual profile to use
 func SetDefaultProfile(name string) error {
+	if name == "" {
+		return errors.New("can not set profile to equla nothing")
+	}
 	target := path.Join(GopherPath, name)
 	if _, err := os.Stat(target); os.IsNotExist(err) {
 		return err
